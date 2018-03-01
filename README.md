@@ -1,3 +1,3 @@
 # Ubc-rest-post-meta
-For Wordpress:s
+For Wordpress:
 Modifying REST API fields to include post meta data
