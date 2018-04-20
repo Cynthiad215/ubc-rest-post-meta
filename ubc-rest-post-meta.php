@@ -37,8 +37,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	 * Get post custom fields
 	 *
 	 * @param WP_REST_Request $object the post object
-	 * @return JSON object with all custom fields if no field key specified, or single custom field value 
-     *              for field key specified
+	 * @return JSON object with all custom fields if no field key specified, or single custom field value for field key specified
 	 */
 	public function get_post_cf( $object ) {
         //Check if post ID exists
@@ -94,7 +93,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
         }
 
         return apply_filters( 'ubc_cm_rest_postmeta_value', $value, $object );
-	}
+    }
 
 }
 
