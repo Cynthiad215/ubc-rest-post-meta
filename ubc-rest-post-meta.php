@@ -4,7 +4,7 @@
  * @wordpress-plugin
  * Plugin Name:       REST API - Custom Endpoint for Post Meta
  * Description:       Adding Custom Endpoint to retrieve custom field values from post meta data
- * Version:           1.0.0
+ * Version:           1.0.0.2
  * Author:            Cynthia Deng 
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -24,7 +24,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	public function register_routes() {
 		$version = '1';
 		$namespace = 'postmeta/v' . $version;
-        $base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[a-zA-Z0-9-]+))?';
+        $base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[\w]+[a-zA-Z0-9\-\_]*))?';
         
 		register_rest_route( $namespace, '/' . $base, array(
 				'methods'         => WP_REST_Server::READABLE,
@@ -41,42 +41,42 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	 */
 	public function get_post_cf( $object ) {
         //Check if post ID exists
-        if( empty( $object['id'] ) ) {
+        if ( empty( $object['id'] ) ) {
             return false;
         }
 
         $post_id = absint( $object['id'] );
 
-        if( ! $post_id ) {
+        if ( ! $post_id ) {
             return false;
         }
 
         //If field key specified, get one custom field value
-        if( isset( $field_key ) && (! empty( $field_key ) ) ) {
+        if ( isset( $object['fieldkey'] ) &&  ! empty( $object['fieldkey'] ) )  {
 
             $field_key = sanitize_title( $object['fieldkey'] );
 
-            if ( ! $fieldkey ) {
+            if ( ! $field_key ) {
                 return false;
             }
 
             $value = get_post_meta( $post_id, $field_key );
 
-        } else {
+            } else {
             
             //No field key specified, get all public data
-            $custom_field = get_post_meta( $post_id );
-
+            $custom_field = get_post_meta( $post_id, '', false );
+            
             $hidden = '_';
 
-            foreach ( $custom_field as $key => $value ){
+            foreach ( $custom_field as $key => $value ) {
 
                 if ( empty( $value ) ) {
                     continue;
                 }
 
                 $pos = strpos( $key, $hidden );
-
+                
                 if ( false === $pos ) {
                     continue;
                 }
