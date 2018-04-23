@@ -40,10 +40,10 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	 * @return JSON object with all custom fields if no field key specified, or single custom field value for field key specified
 	 */
 	public function get_post_cf( $object ) {
-		//Check if post ID exists
-		if ( empty( $object['id'] ) ) {
-		    return false;
-		}
+        //Check if post ID exists
+        if ( ! isset( $object['id'] ) && empty( $object['id'] ) ) {
+            return false;
+        }
 
 		$post_id = absint( $object['id'] );
 
