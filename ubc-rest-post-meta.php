@@ -2,9 +2,9 @@
 /**
  *
  * @wordpress-plugin
- * Plugin Name:       REST API - Custom Endpoint for Post Meta
+ * Plugin Name:       UBC Post Meta Data (Custom Fields)
  * Description:       Adding Custom Endpoint to retrieve custom field values from post meta data
- * Version:           1.0.0.2
+ * Version:           1.0.0
  * Author:            Cynthia Deng 
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -52,7 +52,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
         }
 
         //If field key specified, get one custom field value
-        if ( isset( $object['fieldkey'] ) &&  ! empty( $object['fieldkey'] ) )  {
+        if ( isset( $object['fieldkey'] ) &&  ! empty( $object['fieldkey'] ) ) {
 
             $field_key = sanitize_title( $object['fieldkey'] );
 
@@ -62,7 +62,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 
             $value = get_post_meta( $post_id, $field_key );
 
-            } else {
+        } else {
             
             //No field key specified, get all public data
             $custom_field = get_post_meta( $post_id, '', false );
@@ -73,7 +73,8 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 
                 $pos = strpos( $key, $hidden );
 
-                if ( strpos( $key, $hidden ) === 0 ){
+                //check if private metadata
+                if ( $pos === 0 ) {
                     unset( $custom_field[ $key ] );
                 }
                 
