@@ -23,13 +23,13 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	 */
 	public function register_routes() {
 		$version = '1';
-		$namespace = 'postmeta/v' . $version;
+        $namespace = 'postmeta/v' . $version;
         $base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[\w]+[a-zA-Z0-9\-\_]*))?';
         
 		register_rest_route( $namespace, '/' . $base, array(
-				'methods'         => WP_REST_Server::READABLE,
-                'callback'        => array( $this, 'get_post_cf' ),
-                'args'            => array( 'id', 'fieldkey' ),
+	        'methods'         => WP_REST_Server::READABLE,
+            'callback'        => array( $this, 'get_post_cf' ),
+            'args'            => array( 'id', 'fieldkey' ),
 		) );
 	}
 
@@ -71,27 +71,17 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 
             foreach ( $custom_field as $key => $value ) {
 
-                if ( empty( $value ) ) {
-                    continue;
-                }
-
                 $pos = strpos( $key, $hidden );
-                
-                if ( false === $pos ) {
-                    continue;
-                }
 
-                if ( 0 !== $pos ) {
-                    continue;
+                if ( strpos( $key, $hidden ) === 0 ){
+                    unset( $custom_field[ $key ] );
                 }
-
-                unset( $custom_field[ $key ] );
                 
             }
 
             $value = $custom_field;
         }
-
+        
         return apply_filters( 'ubc_cm_rest_postmeta_value', $value, $object );
     }
 
