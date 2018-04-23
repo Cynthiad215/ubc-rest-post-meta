@@ -23,68 +23,68 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	 */
 	public function register_routes() {
 		$version = '1';
-        $namespace = 'postmeta/v' . $version;
-        $base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[\w]+[a-zA-Z0-9\-\_]*))?';
+        	$namespace = 'postmeta/v' . $version;
+        	$base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[\w]+[a-zA-Z0-9\-\_]*))?';
         
 		register_rest_route( $namespace, '/' . $base, array(
-	        'methods'         => WP_REST_Server::READABLE,
-            'callback'        => array( $this, 'get_post_cf' ),
-            'args'            => array( 'id', 'fieldkey' ),
+	        	'methods'         => WP_REST_Server::READABLE,
+            		'callback'        => array( $this, 'get_post_cf' ),
+            		'args'            => array( 'id', 'fieldkey' ),
 		) );
 	}
 
 	/**
 	 * Get post custom fields
 	 *
-	 * @param WP_REST_Request $object the post object
+	 * @param $object the post object
 	 * @return JSON object with all custom fields if no field key specified, or single custom field value for field key specified
 	 */
 	public function get_post_cf( $object ) {
-        //Check if post ID exists
-        if ( empty( $object['id'] ) ) {
-            return false;
-        }
+		//Check if post ID exists
+		if ( empty( $object['id'] ) ) {
+		    return false;
+		}
 
-        $post_id = absint( $object['id'] );
+		$post_id = absint( $object['id'] );
 
-        if ( ! $post_id ) {
-            return false;
-        }
+		if ( ! $post_id ) {
+		    return false;
+		}
 
-        //If field key specified, get one custom field value
-        if ( isset( $object['fieldkey'] ) &&  ! empty( $object['fieldkey'] ) ) {
+		//If field key specified, get one custom field value
+		if ( isset( $object['fieldkey'] ) &&  ! empty( $object['fieldkey'] ) ) {
 
-            $field_key = sanitize_title( $object['fieldkey'] );
+		    $field_key = sanitize_title( $object['fieldkey'] );
 
-            if ( ! $field_key ) {
-                return false;
-            }
+		    if ( ! $field_key ) {
+			return false;
+		    }
 
-            $value = get_post_meta( $post_id, $field_key );
+		    $value = get_post_meta( $post_id, $field_key );
 
-        } else {
-            
-            //No field key specified, get all public data
-            $custom_field = get_post_meta( $post_id, '', false );
-            
-            $hidden = '_';
+		} else {
 
-            foreach ( $custom_field as $key => $value ) {
+		    //No field key specified, get all public data
+		    $custom_field = get_post_meta( $post_id, '', false );
 
-                $pos = strpos( $key, $hidden );
+		    $hidden = '_';
 
-                //check if private metadata
-                if ( $pos === 0 ) {
-                    unset( $custom_field[ $key ] );
-                }
-                
-            }
+		    foreach ( $custom_field as $key => $value ) {
 
-            $value = $custom_field;
-        }
-        
-        return apply_filters( 'ubc_cm_rest_postmeta_value', $value, $object );
-    }
+			$pos = strpos( $key, $hidden );
+
+			//Check if private meta data
+			if ( $pos === 0 ) {
+			    unset( $custom_field[ $key ] );
+			}
+
+		    }
+
+		    $value = $custom_field;
+		}
+
+		return apply_filters( 'ubc_cm_rest_postmeta_value', $value, $object );
+    	}
 
 }
 
