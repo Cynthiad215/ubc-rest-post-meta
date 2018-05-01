@@ -24,7 +24,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 	public function register_routes() {
 		$version = '1';
         	$namespace = 'postmeta/v' . $version;
-        	$base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[\w]+[a-zA-Z0-9\-\_]*))?';
+        	$base = 'fields/(?P<id>\d+)(?:/(?P<fieldkey>[a-zA-Z0-9]+[\w\-]*))?';
         
 		register_rest_route( $namespace, '/' . $base, array(
 	        	'methods'         => WP_REST_Server::READABLE,
@@ -68,7 +68,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 		    $custom_field = get_post_meta( $post_id, '', false );
 
 		    $hidden = '_';
-
+				
 		    foreach ( $custom_field as $key => $value ) {
 
 			$pos = strpos( $key, $hidden );
