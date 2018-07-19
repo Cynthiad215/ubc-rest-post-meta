@@ -56,7 +56,7 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
 		//If field key specified, get one custom field value
 		if ( isset( $object['fieldkey'] ) &&  ! empty( $object['fieldkey'] ) ) {
 
-		    $field_key = sanitize_title( $object['fieldkey'] );
+		    $field_key = wp_kses_post( $object['fieldkey'] );
 
 		    if ( ! $field_key ) {
 			return false;
