@@ -13,6 +13,11 @@
 
 class UBC_WP_REST_API_meta extends WP_REST_Controller {
 
+	public function __construct() {
+		/* Register routes on 'init'. */
+		add_action( 'init', array( $this, 'register_routes' ) );
+	}
+
 	/**
 	 * Add our hooks
 	 *
@@ -89,9 +94,4 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
     	}
 
 }
-
-add_action( 'plugins_loaded', 'init_WP_API_meta' );
-function init_WP_API_meta() {
-    $wp_api_meta = new UBC_WP_REST_API_meta();
-    $wp_api_meta->register_routes();
-}/* init_WP_API_meta() */
+new UBC_WP_REST_API_meta();
