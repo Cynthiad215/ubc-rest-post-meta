@@ -94,4 +94,8 @@ class UBC_WP_REST_API_meta extends WP_REST_Controller {
     	}
 
 }
-new UBC_WP_REST_API_meta();
+
+add_action( 'plugins_loaded', 'init_WP_API_meta' );
+function init_WP_API_meta() {
+    $wp_api_meta = new UBC_WP_REST_API_meta();
+}/* init_WP_API_meta() */
